@@ -10,21 +10,24 @@ if %errorLevel% neq 0 (
     exit /b 1
 )
 
-:: Cài đặt Python nếu chưa có
+:: Kiểm tra Python
 where python >nul 2>&1
 if %errorLevel% neq 0 (
-    echo Python is not installed. Installing Python...
-    powershell -Command "Invoke-WebRequest -Uri https://www.python.org/ftp/python/3.9.7/python-3.9.7-amd64.exe -OutFile python-installer.exe"
-    python-installer.exe /quiet InstallAllUsers=1 PrependPath=1
-    del python-installer.exe
+    echo Python is not installed. Please download and install Python from:
+    echo https://www.python.org/downloads/
+    pause
+    exit /b 1
 )
 
-:: Cài đặt pyperclip
+:: Cài đặt pyperclip nếu Python đã có
+echo Installing pyperclip...
 pip install pyperclip
 
 :: Tạo thư mục trong Program Files
 set "install_dir=%ProgramFiles%\notem"
-mkdir "%install_dir%" 2>nul
+if not exist "%install_dir%" (
+    mkdir "%install_dir%" 2>nul
+)
 
 :: In đường dẫn để kiểm tra
 echo Source directory: "%~dp0"
@@ -44,9 +47,15 @@ xcopy "%~dp0" "%install_dir%" /E /H /I /Y
     echo python "%install_dir%\notem.py" %%*
 ) > "%install_dir%\notem.bat"
 
-:: Thêm thư mục vào PATH
-for /f "tokens=2*" %%a in ('reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path') do set "current_path=%%b"
-setx /M PATH "%current_path%;%install_dir%"
+:: Thêm thư mục vào PATH nếu chưa có
+set "batch_path=%install_dir%"
+for %%i in ("%PATH:;=";"%") do (
+    if "%%~i"=="%batch_path%" set "found_path=true"
+)
+if not defined found_path (
+    echo Adding %install_dir% to PATH...
+    setx /M PATH "%PATH%;%install_dir%"
+)
 
 echo Installation completed successfully.
 echo Please restart your command prompt to use 'notem' commands.
