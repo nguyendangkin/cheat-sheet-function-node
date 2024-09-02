@@ -34,14 +34,14 @@ Bằng cách cung cấp một cách tiếp cận có hệ thống để quản l
 
 ### Quy trình cài đặt
 
-0. Yêu cầu máy đã có python (nếu không, bạn vui lòng lên trang chủ python để tải và cài đặt)
-1. Tải xuống tập tin `install.bat` và `notem.py`.
-2. Đặt cả hai tập tin vào cùng một thư mục.
+0. Yêu cầu máy đã có python (nếu không, bạn vui lòng lên trang chủ python để tải và cài đặt).
+1. Clone repo bằng git.
+2. Tiến vào folder repo.
 3. Nhấp chuột phải vào tệp `install.bat` và chọn "Chạy với quyền quản trị viên".
 4. Tập lệnh cài đặt sẽ tự động:
 
     - Cài đặt thư viện `pyperclip` cần thiết
-    - Tạo thư mục cài đặt trong Program Files
+    - Tạo thư mục cài đặt trong user
     - Sao chép tất cả các tệp cần thiết vào thư mục cài đặt
     - Thêm thư mục cài đặt vào PATH hệ thống
 
