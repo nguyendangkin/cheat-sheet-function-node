@@ -1,6 +1,20 @@
 # Notem
 
-Notem là một công cụ dòng lệnh để quản lý và chia sẻ các đoạn mã một cách dễ dảng trong một kho Git. Nó cho phép người dùng liệt kê, xem, tạo, xóa và đẩy các đoạn mã được lưu trữ dưới dạng tệp văn bản.
+Notem là một công cụ dòng lệnh tiên tiến được thiết kế để tối ưu hóa quy trình phát triển phần mềm bằng cách cung cấp truy cập nhanh chóng và hiệu quả đến một kho lưu trữ các đoạn mã mẫu. Được tích hợp chặt chẽ với Git, Notem cho phép lập trình viên truy xuất, quản lý và chia sẻ các đoạn mã trực tiếp từ terminal, loại bỏ nhu cầu chuyển đổi giữa trình duyệt web hoặc các tệp cục bộ để tìm kiếm code mẫu.
+
+Chức năng chính của Notem bao gồm:
+
+1. Truy xuất nhanh: Cho phép người dùng xem và sao chép các đoạn mã mẫu ngay lập tức, tiết kiệm thời gian tìm kiếm trên internet hoặc trong các tệp cục bộ.
+
+2. Quản lý kho mã: Hỗ trợ liệt kê, thêm mới, và xóa các đoạn mã, giúp duy trì một kho lưu trữ có tổ chức và cập nhật.
+
+3. Đồng bộ hóa Git: Tự động đồng bộ hóa kho mã với kho lưu trữ Git từ xa, đảm bảo tất cả các thành viên trong nhóm luôn có quyền truy cập vào phiên bản mới nhất của các đoạn mã.
+
+4. Tương tác qua Terminal: Cung cấp giao diện dòng lệnh đơn giản nhưng mạnh mẽ, cho phép lập trình viên làm việc hiệu quả mà không cần rời khỏi môi trường phát triển của họ.
+
+5. Tích hợp Clipboard: Cho phép sao chép nhanh chóng các đoạn mã vào clipboard, tạo điều kiện thuận lợi cho việc sử dụng lại mã trong các dự án.
+
+Bằng cách cung cấp một cách tiếp cận có hệ thống để quản lý và truy cập các đoạn mã mẫu, Notem giúp tăng năng suất, cải thiện tính nhất quán của mã, và thúc đẩy việc chia sẻ kiến thức trong các nhóm phát triển phần mềm.
 
 ## Tính năng
 
