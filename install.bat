@@ -26,8 +26,17 @@ pip install pyperclip
 set "install_dir=%ProgramFiles%\notem"
 mkdir "%install_dir%" 2>nul
 
-:: Sao chép toàn bộ nội dung thư mục vào thư mục cài đặt
-robocopy "%~dp0" "%install_dir%" /E /COPYALL /R:3 /W:5
+:: In đường dẫn để kiểm tra
+echo Source directory: "%~dp0"
+echo Destination directory: "%install_dir%"
+
+:: In danh sách file trong thư mục nguồn
+echo Listing files in source directory:
+dir /b "%~dp0"
+
+:: Sao chép toàn bộ nội dung thư mục vào thư mục cài đặt bằng xcopy
+echo Running xcopy...
+xcopy "%~dp0*" "%install_dir%" /E /I /Y
 
 :: Tạo file batch cho lệnh 'notem'
 (
