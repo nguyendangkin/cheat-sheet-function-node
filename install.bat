@@ -25,9 +25,11 @@ pip install pyperclip
 
 :: Tạo thư mục trong thư mục người dùng
 set "install_dir=%USERPROFILE%\notem"
-if not exist "%install_dir%" (
-    mkdir "%install_dir%" 2>nul
+if exist "%install_dir%" (
+    echo Directory "%install_dir%" already exists. Removing existing files...
+    rmdir /s /q "%install_dir%"
 )
+mkdir "%install_dir%"
 
 :: In đường dẫn để kiểm tra
 echo Source directory: "%~dp0"
@@ -44,6 +46,8 @@ xcopy "%~dp0" "%install_dir%" /E /H /I /Y
 :: Tạo file batch cho lệnh 'notem'
 (
     echo @echo off
+    echo setlocal
+    echo cd /d "%install_dir%"
     echo python "%install_dir%\notem.py" %%*
 ) > "%install_dir%\notem.bat"
 

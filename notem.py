@@ -7,13 +7,30 @@ import subprocess
 REPO_STATE_FILE = '.repo_state'
 PENDING_FILES_FILE = '.pending_files'
 
-def get_current_commit_hash():
+def get_git_root():
+    current_dir = os.getcwd()
+    while current_dir != os.path.dirname(current_dir):  # Until we reach the root
+        if os.path.isdir(os.path.join(current_dir, '.git')):
+            return current_dir
+        current_dir = os.path.dirname(current_dir)
+    return None
+
+def run_git_command(args):
+    git_root = get_git_root()
+    if git_root is None:
+        print("Error: .git directory not found.")
+        print(f"Current working directory: {os.getcwd()}")
+        return None
+    os.chdir(git_root)  # Change to the git root directory
     try:
-        result = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True, check=True)
+        result = subprocess.run(['git'] + args, capture_output=True, text=True, check=True)
         return result.stdout.strip()
     except subprocess.CalledProcessError:
-        print("Failed to get current commit hash.")
+        print(f"Failed to run git {' '.join(args)}.")
         return None
+
+def get_current_commit_hash():
+    return run_git_command(['rev-parse', 'HEAD'])
 
 def load_repo_state():
     if os.path.exists(REPO_STATE_FILE):
@@ -42,12 +59,9 @@ def list_files():
 
     saved_hash = load_repo_state()
     if saved_hash != current_hash:
-        try:
-            subprocess.run(['git', 'pull'], check=True)
-            save_repo_state(current_hash)
-        except subprocess.CalledProcessError:
-            print("Failed to pull files from the repository.")
+        if run_git_command(['pull']) is None:
             return
+        save_repo_state(current_hash)
 
     txt_files = [f for f in os.listdir('.') if f.endswith('.txt')]
     if not txt_files:
@@ -91,13 +105,13 @@ def delete_file(index):
         os.remove(file_name)
         print(f"File '{file_name}' has been deleted.")
 
-        try:
-            subprocess.run(['git', 'add', file_name], check=True)
-            subprocess.run(['git', 'commit', '-m', f'Delete {file_name}'], check=True)
-            subprocess.run(['git', 'push'], check=True)
-            print(f"File '{file_name}' deletion has been pushed to the repository.")
-        except subprocess.CalledProcessError:
-            print("Failed to push the deletion to the repository.")
+        if run_git_command(['add', file_name]) is None:
+            return
+        if run_git_command(['commit', '-m', f'Delete {file_name}']) is None:
+            return
+        if run_git_command(['push']) is None:
+            return
+        print(f"File '{file_name}' deletion has been pushed to the repository.")
 
         pending_files = load_pending_files()
         if file_name in pending_files:
@@ -120,18 +134,15 @@ def push_pending_files():
         return
 
     for file_name in pending_files:
-        try:
-            subprocess.run(['git', 'add', file_name], check=True)
-            subprocess.run(['git', 'commit', '-m', f'Add {file_name}'], check=True)
-        except subprocess.CalledProcessError:
-            print(f"Failed to commit the file {file_name}.")
+        if run_git_command(['add', file_name]) is None:
+            continue
+        if run_git_command(['commit', '-m', f'Add {file_name}']) is None:
+            continue
     
-    try:
-        subprocess.run(['git', 'push'], check=True)
-        print("All pending files have been pushed to the repository.")
-        os.remove(PENDING_FILES_FILE)  # Clear the pending files record
-    except subprocess.CalledProcessError:
-        print("Failed to push files to the repository.")
+    if run_git_command(['push']) is None:
+        return
+    print("All pending files have been pushed to the repository.")
+    os.remove(PENDING_FILES_FILE)  # Clear the pending files record
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
