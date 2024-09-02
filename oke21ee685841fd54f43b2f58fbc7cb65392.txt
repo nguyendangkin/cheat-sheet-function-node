@@ -1,5 +1,0 @@
-        elif command.isdigit():
-            show_file_content(int(command))
-        elif command == 'up' and len(sys.argv) == 3:
-            file_name = sys.argv[2]
-            code = get_code_from_clipboard()

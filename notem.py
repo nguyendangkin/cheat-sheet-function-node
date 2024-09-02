@@ -5,6 +5,7 @@ import uuid
 import subprocess
 
 REPO_STATE_FILE = '.repo_state'
+PENDING_FILES_FILE = '.pending_files'
 
 def get_current_commit_hash():
     try:
@@ -24,6 +25,16 @@ def save_repo_state(commit_hash):
     with open(REPO_STATE_FILE, 'w') as f:
         f.write(commit_hash)
 
+def load_pending_files():
+    if os.path.exists(PENDING_FILES_FILE):
+        with open(PENDING_FILES_FILE, 'r') as f:
+            return set(f.read().strip().split('\n'))
+    return set()
+
+def save_pending_files(pending_files):
+    with open(PENDING_FILES_FILE, 'w') as f:
+        f.write('\n'.join(pending_files))
+
 def list_files():
     current_hash = get_current_commit_hash()
     if current_hash is None:
@@ -31,7 +42,6 @@ def list_files():
 
     saved_hash = load_repo_state()
     if saved_hash != current_hash:
-        # Kéo các file mới từ repo GitHub nếu cần
         try:
             subprocess.run(['git', 'pull'], check=True)
             save_repo_state(current_hash)
@@ -69,13 +79,9 @@ def create_file_with_code(base_name, code):
 
     print(f"File '{unique_name}' has been created with the provided code.")
 
-    try:
-        subprocess.run(['git', 'add', unique_name], check=True)
-        subprocess.run(['git', 'commit', '-m', f'Add {unique_name}'], check=True)
-        subprocess.run(['git', 'push'], check=True)
-        print(f"File '{unique_name}' has been pushed to the repository.")
-    except subprocess.CalledProcessError:
-        print("Failed to push the file to the repository.")
+    pending_files = load_pending_files()
+    pending_files.add(unique_name)
+    save_pending_files(pending_files)
 
 def delete_file(index):
     txt_files = [f for f in os.listdir('.') if f.endswith('.txt')]
@@ -93,6 +99,11 @@ def delete_file(index):
         except subprocess.CalledProcessError:
             print("Failed to push the deletion to the repository.")
 
+        pending_files = load_pending_files()
+        if file_name in pending_files:
+            pending_files.remove(file_name)
+            save_pending_files(pending_files)
+
     except IndexError:
         print(f"No file found at index {index}.")
     except FileNotFoundError:
@@ -102,9 +113,29 @@ def get_code_from_clipboard():
     code = pyperclip.paste()
     return code
 
+def push_pending_files():
+    pending_files = load_pending_files()
+    if not pending_files:
+        print("No pending files to push.")
+        return
+
+    for file_name in pending_files:
+        try:
+            subprocess.run(['git', 'add', file_name], check=True)
+            subprocess.run(['git', 'commit', '-m', f'Add {file_name}'], check=True)
+        except subprocess.CalledProcessError:
+            print(f"Failed to commit the file {file_name}.")
+    
+    try:
+        subprocess.run(['git', 'push'], check=True)
+        print("All pending files have been pushed to the repository.")
+        os.remove(PENDING_FILES_FILE)  # Clear the pending files record
+    except subprocess.CalledProcessError:
+        print("Failed to push files to the repository.")
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: notem.py <command> [index] or notem.py up <name> or notem.py rm <index>")
+        print("Usage: notem.py <command> [index] or notem.py up <name> or notem.py rm <index> or notem.py ups")
     else:
         command = sys.argv[1]
 
@@ -121,5 +152,7 @@ if __name__ == "__main__":
                 print("Clipboard is empty. Please copy the code before running the command.")
         elif command == 'rm' and len(sys.argv) == 3 and sys.argv[2].isdigit():
             delete_file(int(sys.argv[2]))
+        elif command == 'ups':
+            push_pending_files()
         else:
             print(f"Unknown command or missing arguments: {command}")
