@@ -88,7 +88,6 @@ Notem cung cấp các lệnh sau:
 
 ## Lưu ý
 
--   Đảm bảo bạn đang ở trong thư mục của kho Git khi sử dụng các lệnh Notem.
 -   Notem sẽ tự động kéo các thay đổi từ kho lưu trữ từ xa khi bạn chạy lệnh `ls` để đảm bảo bạn luôn làm việc với phiên bản mới nhất.
 -   Khi tạo hoặc xóa tệp, Notem sẽ tự động thêm, commit và đẩy các thay đổi lên kho lưu trữ từ xa.
 
