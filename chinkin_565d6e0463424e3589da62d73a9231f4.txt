@@ -1,8 +1,0 @@
-Enumerating objects: 8, done.
-Counting objects: 100% (8/8), done.
-Delta compression using up to 16 threads
-Compressing objects: 100% (6/6), done.
-Writing objects: 100% (6/6), 1.17 KiB | 1.17 MiB/s, done.    
-Total 6 (delta 3), reused 0 (delta 0), pack-reused 0 (from 0)
-remote: Resolving deltas: 100% (3/3), completed with 1 local object.
-To github.com:nguyendangkin/cheat-sheet-function-node.git
