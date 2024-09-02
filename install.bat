@@ -41,10 +41,6 @@ dir /b "%~dp0"
 echo Running xcopy...
 xcopy "%~dp0" "%install_dir%" /E /H /I /Y
 
-:: Cấu hình Git để xử lý lỗi ownership
-echo Configuring Git...
-git config --global --add safe.directory "%install_dir%"
-
 :: Tạo file batch cho lệnh 'notem'
 (
     echo @echo off
