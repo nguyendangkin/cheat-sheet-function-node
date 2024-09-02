@@ -1,0 +1,10 @@
+  async handleGenerateAccessToken(user: any) {
+    const payload = {
+      username: user.username,
+      sub: user.id,
+      role: user.role,
+    };
+    return await this.jwtService.sign(payload, {
+      expiresIn: this.configService.get('ACCESS_TOKEN_EXPIRATION'),
+    });
+  }
