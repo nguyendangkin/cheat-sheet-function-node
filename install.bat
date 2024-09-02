@@ -23,8 +23,8 @@ if %errorLevel% neq 0 (
 echo Installing pyperclip...
 pip install pyperclip
 
-:: Tạo thư mục trong Program Files
-set "install_dir=%ProgramFiles%\notem"
+:: Tạo thư mục trong thư mục người dùng
+set "install_dir=%USERPROFILE%\notem"
 if not exist "%install_dir%" (
     mkdir "%install_dir%" 2>nul
 )
@@ -40,6 +40,10 @@ dir /b "%~dp0"
 :: Sao chép toàn bộ nội dung thư mục vào thư mục cài đặt bằng xcopy
 echo Running xcopy...
 xcopy "%~dp0" "%install_dir%" /E /H /I /Y
+
+:: Cấu hình Git để xử lý lỗi ownership
+echo Configuring Git...
+git config --global --add safe.directory "%install_dir%"
 
 :: Tạo file batch cho lệnh 'notem'
 (
