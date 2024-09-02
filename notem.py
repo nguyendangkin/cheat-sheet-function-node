@@ -98,7 +98,7 @@ if __name__ == "__main__":
                 create_file_with_code(file_name, code)
             else:
                 print("Clipboard is empty. Please copy the code before running the command.")
-        elif command == 'rm' and len(sys.argv) == 2 and sys.argv[2].isdigit():
+        elif command == 'rm' and len(sys.argv) == 3 and sys.argv[2].isdigit():
             delete_file(int(sys.argv[2]))
         else:
             print(f"Unknown command or missing arguments: {command}")
