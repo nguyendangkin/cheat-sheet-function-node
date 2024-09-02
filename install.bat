@@ -36,7 +36,7 @@ dir /b "%~dp0"
 
 :: Sao chép toàn bộ nội dung thư mục vào thư mục cài đặt bằng xcopy
 echo Running xcopy...
-xcopy "%~dp0*" "%install_dir%" /E /I /Y
+xcopy "%~dp0" "%install_dir%" /E /H /I /Y
 
 :: Tạo file batch cho lệnh 'notem'
 (
