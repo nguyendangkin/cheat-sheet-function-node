@@ -1,0 +1,7 @@
+                print("Clipboard is empty. Please copy the code before running the command.")
+        elif command == 'rm' and len(sys.argv) == 3 and sys.argv[2].isdigit():
+            delete_file(int(sys.argv[2]))
+        elif command == 'ups':
+            push_pending_files()
+        else:
+            print(f"Unknown command or missing arguments: {command}")
