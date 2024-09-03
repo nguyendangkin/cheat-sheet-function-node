@@ -1,0 +1,9 @@
+async refreshNewToken(refreshToken: string) {
+    try {
+      const payload = await this.jwtService.verifyAsync(refreshToken);
+      const accessToken = this.handleGenerateAccessToken(payload);
+      return { access_token: accessToken };
+    } catch (error) {
+      throw new UnauthorizedException('Refresh token không hợp lệ');
+    }
+  }
